@@ -1,0 +1,56 @@
+﻿@model ReservationPlatform.Models.Reservation
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Create Reservation</h1>
+
+<form asp-action="Create" method="post" id="reservationForm">
+    <div class="form-group">
+        <label asp-for="ServiceName"></label>
+        <input asp-for="ServiceName" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="Price"></label>
+        <input asp-for="Price" class="form-control" readonly />
+    </div>
+    <div class="form-group">
+        <label asp-for="ReservationDate"></label>
+        <input asp-for="ReservationDate" type="date" class="form-control" />
+    </div>
+
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">Submit</button>
+
+    <!-- Модал -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Confirm Reservation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to create a reservation for:</p>
+                    <ul>
+                        <li><strong>Service:</strong> <span id="modalServiceName">@Model.ServiceName</span></li>
+                        <li><strong>Date:</strong> <span id="modalReservationDate"></span></li>
+                        <li><strong>Price:</strong> <span id="modalPrice">@Model.Price.ToString("C")</span></li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="submit" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <script>
+        document.querySelector("#reservationForm").addEventListener("input", function () {
+            document.querySelector("#modalReservationDate").innerText = document.querySelector("[name='ReservationDate']").value;
+        });
+    </script>
+}

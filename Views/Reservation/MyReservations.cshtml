@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ReservationPlatform.Models.Reservation>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>My Reservations</h1>
+
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-info">
+        @TempData["Message"]
+    </div>
+}
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Service Name</th>
+            <th>Date</th>
+            <th>Price</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reservation in Model)
+        {
+            <tr>
+                <td>@reservation.ServiceName</td>
+                <td>@reservation.ReservationDate.ToShortDateString()</td>
+                <td>@reservation.Price.ToString("C")</td>
+                <td>
+                    <a class="btn btn-danger" asp-controller="Reservation" asp-action="Cancel" asp-route-id="@reservation.Id">Cancel</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ReservationPlatform.Models
 {
@@ -12,5 +13,7 @@ namespace ReservationPlatform.Models
         public string ImageUrl { get; set; }
         public string Availability { get; set; }
         public DateTime CreatedOn { get; set; }
+
+    
     }
 }

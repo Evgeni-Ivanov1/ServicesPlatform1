@@ -10,7 +10,7 @@ using ReservationPlatform.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-string connectionString = builder.Configuration.GetConnectionString("SE1WE");
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options => { options.UseSqlServer(connectionString);
  });
 

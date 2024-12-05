@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<ReservationPlatform.Models.Review>
+
 @{
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<h1>Service Reviews</h1>
+
+@if (!Model.Any())
+{
+    <p>No reviews yet. Be the first to add one!</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Comment</th>
+                <th>Rating</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var review in Model)
+            {
+                <tr>
+                    <td>@review.Username</td>
+                    <td>@review.Comment</td>
+                    <td>@review.Rating</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<a class="btn btn-primary" asp-controller="Review" asp-action="Create" asp-route-serviceId="@ViewBag.ServiceId">Add Review</a>

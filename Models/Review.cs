@@ -1,16 +1,24 @@
-﻿using System;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ReservationPlatform.Models
 {
     public class Review
     {
         public int Id { get; set; }
-        public string UserId { get; set; }
-        public ApplicationUser User { get; set; }
+
+        [Required]
         public int ServiceId { get; set; }
-        public Service Service { get; set; }
-        public int Rating { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string Username { get; set; }
+
+        [Required]
+        [StringLength(500)]
         public string Comment { get; set; }
-        public DateTime CreatedOn { get; set; }
+
+        [Required]
+        [Range(1, 5)]
+        public int Rating { get; set; }
     }
 }

@@ -20,7 +20,8 @@ namespace ReservationPlatform.Controllers
             var model = new Reservation
             {
                 ServiceName = serviceName,
-                Price = price
+                Price = price,
+                ReservationDate = DateTime.Now
             };
             return View(model);
         }

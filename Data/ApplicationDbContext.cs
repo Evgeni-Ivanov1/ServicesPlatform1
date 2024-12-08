@@ -15,5 +15,6 @@ namespace ReservationPlatform.Data
             : base(options)
         {
         }
+        public DbSet<AdminLog> AdminLogs { get; set; }
     }
 }

@@ -1,7 +1,7 @@
-﻿using ReservationPlatform.Models;
+﻿using ServicesPlatform.Data.Models;
 using System.Collections.Generic;
 
-namespace ReservationPlatform.ViewModels
+namespace ReservationPlatform.OutputModels
 {
     public class ServiceDetailsViewModel
     {

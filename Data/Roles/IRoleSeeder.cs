@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace ReservationPlatform.Roles
+namespace ServicesPlatform.Data.Roles
 {
     public interface IRoleSeeder
     {

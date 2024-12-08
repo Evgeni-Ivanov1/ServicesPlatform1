@@ -1,8 +1,7 @@
-namespace ReservationPlatform.Models
+﻿namespace ServicesPlatform.Models.InputModels.Category
 {
-    public class Category
+    public class CreateCategoryInputModel
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
     }

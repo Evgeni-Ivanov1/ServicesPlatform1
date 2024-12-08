@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using ReservationPlatform.Models;
-using ReservationPlatform.ViewModels;
-using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using ServicesPlatform.Contracts.Services;
 using System.Threading.Tasks;
 
 namespace ReservationPlatform.Controllers

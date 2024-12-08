@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using System;
 
-namespace ReservationPlatform.Models
+namespace ServicesPlatform.Data.Models
 {
     public class ApplicationUser : IdentityUser
     {

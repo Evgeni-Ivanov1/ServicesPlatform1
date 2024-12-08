@@ -1,7 +1,7 @@
 
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using ReservationPlatform.Models;
+using ServicesPlatform.Data.Models;
 
 namespace ReservationPlatform.Data
 {

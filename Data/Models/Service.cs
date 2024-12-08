@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ReservationPlatform.Models
+namespace ServicesPlatform.Data.Models
 {
     public class Service
     {
@@ -14,6 +14,6 @@ namespace ReservationPlatform.Models
         public string Availability { get; set; }
         public DateTime CreatedOn { get; set; }
 
-    
+
     }
 }

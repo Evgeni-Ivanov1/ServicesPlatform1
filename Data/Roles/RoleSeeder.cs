@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ReservationPlatform.Models;
+using ServicesPlatform.Data.Models;
 using System;
 using System.Threading.Tasks;
 
-namespace ReservationPlatform.Roles
+namespace ServicesPlatform.Data.Roles
 {
     public class RoleSeeder : IRoleSeeder
     {

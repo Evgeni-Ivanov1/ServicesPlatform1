@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReservationPlatform.ViewModels
+namespace ReservationPlatform.OutputModels
 {
     public class LoginViewModel
     {

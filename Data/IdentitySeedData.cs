@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Threading.Tasks;
-using ReservationPlatform.Models;
+using ServicesPlatform.Data.Models;
 
 
 namespace ReservationPlatform.Data

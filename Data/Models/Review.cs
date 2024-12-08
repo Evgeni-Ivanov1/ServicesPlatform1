@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ReservationPlatform.Models
+namespace ServicesPlatform.Data.Models
 {
     public class Review
     {

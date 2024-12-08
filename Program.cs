@@ -5,8 +5,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReservationPlatform.Data;
-using ReservationPlatform.Models;
-using ReservationPlatform.Roles;
+using ServicesPlatform.Contracts.Repositories;
+using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Data.Models;
+using ServicesPlatform.Data.Repositories;
+using ServicesPlatform.Data.Roles;
+using ServicesPlatform.Services;
 using System;
 
 
@@ -32,12 +36,14 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Add roles seeding
-builder.Services.AddScoped<IRoleSeeder, RoleSeeder>();
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IRoleSeeder, RoleSeeder>();
 
 var app = builder.Build();
 
@@ -68,8 +74,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Enable authentication
-app.UseAuthorization();  // Enable authorization
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 
 app.MapControllerRoute(
     name: "default",

@@ -1,8 +1,9 @@
-﻿@model ReservationPlatform.Models.Service
+﻿@using ServicesPlatform.Data.Models
+@model Service
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var reviews = ViewBag.Reviews as List<ReservationPlatform.Models.Review>;
+    var reviews = ViewBag.Reviews as List<Review>;
 }
 
 <h1 class="text-center">@Model.Name</h1>

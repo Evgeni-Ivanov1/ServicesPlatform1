@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ReservationPlatform.Models;
+using ServicesPlatform.Data.Models;
 using System.Collections.Generic;
 using System.Linq;
 

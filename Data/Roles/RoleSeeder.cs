@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using ServicesPlatform.Data.Models;
-using System;
 using System.Threading.Tasks;
 
 namespace ServicesPlatform.Data.Roles
@@ -8,9 +6,9 @@ namespace ServicesPlatform.Data.Roles
     public class RoleSeeder : IRoleSeeder
     {
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public RoleSeeder(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+        public RoleSeeder(RoleManager<IdentityRole> roleManager, UserManager<IdentityUser> userManager)
         {
             _roleManager = roleManager;
             _userManager = userManager;
@@ -18,10 +16,8 @@ namespace ServicesPlatform.Data.Roles
 
         public async Task SeedRolesAsync()
         {
-            // Define roles
             string[] roles = { "Administrator", "User" };
 
-            // Create roles if they do not exist
             foreach (var role in roles)
             {
                 if (!await _roleManager.RoleExistsAsync(role))
@@ -30,17 +26,14 @@ namespace ServicesPlatform.Data.Roles
                 }
             }
 
-            // Seed an administrator user
             var adminEmail = "admin@example.com";
             var adminUser = await _userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)
             {
-                adminUser = new ApplicationUser
+                adminUser = new IdentityUser
                 {
                     UserName = adminEmail,
-                    Email = adminEmail,
-                    FullName = "Admin User",
-                    RegistrationDate = DateTime.Now
+                    Email = adminEmail
                 };
 
                 var result = await _userManager.CreateAsync(adminUser, "Admin123!");

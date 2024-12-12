@@ -16,8 +16,6 @@ namespace ReservationPlatform.Data
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
             var userManager = serviceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-
-            // Create roles if they do not exist
             if (!await roleManager.RoleExistsAsync(AdminRole))
             {
                 await roleManager.CreateAsync(new IdentityRole(AdminRole));
@@ -28,7 +26,7 @@ namespace ReservationPlatform.Data
                 await roleManager.CreateAsync(new IdentityRole(UserRole));
             }
 
-            // Create an admin user if it does not exist
+
             var adminEmail = "admin@example.com";
             var adminUser = await userManager.FindByEmailAsync(adminEmail);
             if (adminUser == null)

@@ -1,11 +1,6 @@
-﻿@model ReservationPlatform.OutputModels.LoginViewModel
-@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+﻿@model LoginViewModel
 
-<h2>Login</h2>
-
-<form asp-action="Login" method="post">
+<form asp-controller="User" asp-action="Login" method="post">
     <div class="form-group">
         <label asp-for="Email"></label>
         <input asp-for="Email" class="form-control" />
@@ -22,3 +17,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Login</button>
 </form>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,116 +1,103 @@
 using Microsoft.AspNetCore.Mvc;
-using ServicesPlatform.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ServicesPlatform.Contracts.Services;
+using System.Threading.Tasks;
 
-namespace ReservationPlatform.Controllers
+public class ServiceController : Controller
 {
-    public class ServiceController : Controller
+    [HttpGet]
+    public IActionResult Add()
     {
-        private readonly List<Service> _services = new List<Service>
-        {
-            new Service
-            {
-                Id = 1,
-                Name = "Web Development",
-                Description = "Create modern websites.",
-                Price = 1200,
-                Category = "IT",
-                ImageUrl = "/images/webdev.jpg",
-                Availability = "Available",
-                CreatedOn = DateTime.Now.AddDays(-30)
-            },
-            new Service
-            {
-                Id = 2,
-                Name = "Graphic Design",
-                Description = "Design stunning visuals.",
-                Price = 800,
-                Category = "Design",
-                ImageUrl = "/images/graphic.jpg",
-                Availability = "Available",
-                CreatedOn = DateTime.Now.AddDays(-20)
-            },
-            new Service
-            {
-                Id = 3,
-                Name = "SEO Optimization",
-                Description = "Improve website visibility.",
-                Price = 600,
-                Category = "Marketing",
-                ImageUrl = "/images/seo.jpg",
-                Availability = "Available",
-                CreatedOn = DateTime.Now.AddDays(-10)
-            } ,
-    new Service
-    {
-        Id = 4,
-        Name = "Relaxing Massage",
-        Description = "Marty-Party is back again. Relax in my hands; I offer the best Lumi-Lumi massage. Additional services are available for an extra fee, slide is included in the price.",
-        Price = 300,
-        Category = "Relax",
-        ImageUrl = "/images/massage.jpg",
-        Availability = "Available",
-        CreatedOn = DateTime.Now
+        return View();
     }
-};
 
-        private static readonly List<Review> _reviews = new List<Review>
+    [HttpPost]
+    public async Task<IActionResult> Add(CreateServiceInputModel model)
+    {
+        if (ModelState.IsValid)
         {
-            new Review { Id = 1, ServiceId = 1, Username = "John Doe", Comment = "Great service!", Rating = 5 },
-            new Review { Id = 2, ServiceId = 1, Username = "Jane Smith", Comment = "Very satisfied!", Rating = 4 },
-            new Review { Id = 1, ServiceId = 4, Username = "Rumen Tsonkov aka eblio", Comment = "Correct! Recommend..", Rating = 5 }
+            await _serviceService.CreateAsync(model);
+            return RedirectToAction("Index");
+        }
+
+        return View(model);
+    }
+
+    private readonly IServiceService _serviceService;
+
+    public ServiceController(IServiceService serviceService)
+    {
+        _serviceService = serviceService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var services = await _serviceService.GetAllAsync();
+        return View(services);
+    }
+
+    public async Task<IActionResult> Details(int id)
+    {
+        var service = await _serviceService.GetByIdAsync(id);
+        if (service == null) return NotFound();
+        return View(service);
+    }
+
+    public IActionResult Create()
+    {
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateServiceInputModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            await _serviceService.CreateAsync(model);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(model);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var service = await _serviceService.GetByIdAsync(id);
+        if (service == null) return NotFound();
+
+        var model = new UpdateServiceInputModel
+        {
+            Id = service.Id,
+            Name = service.Name,
+            Description = service.Description,
+            Price = service.Price,
+            Category = service.Category,
+            ImageUrl = service.ImageUrl,
+            Availability = service.Availability
         };
+        return View(model);
+    }
 
-        private static readonly List<Reservation> _reservations = new List<Reservation>();
-
-        public IActionResult Index()
+    [HttpPost]
+    public async Task<IActionResult> Edit(UpdateServiceInputModel model)
+    {
+        if (ModelState.IsValid)
         {
-            return View(_services);
+            await _serviceService.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
         }
+        return View(model);
+    }
 
-        public IActionResult Details(int id)
-        {
-            var service = _services.FirstOrDefault(s => s.Id == id);
-            if (service == null) return NotFound();
+    public async Task<IActionResult> Delete(int id)
+    {
+        var service = await _serviceService.GetByIdAsync(id);
+        if (service == null) return NotFound();
+        return View(service);
+    }
 
-            ViewBag.Reviews = _reviews.Where(r => r.ServiceId == id).ToList();
-            ViewBag.Reservations = _reservations.Where(r => r.ServiceId == id).ToList();
-
-            return View(service);
-        }
-
-        [HttpPost]
-        public IActionResult AddReview(Review review)
-        {
-            if (ModelState.IsValid)
-            {
-                review.Id = _reviews.Max(r => r.Id) + 1;
-                _reviews.Add(review);
-                return RedirectToAction("Details", new { id = review.ServiceId });
-            }
-
-            return RedirectToAction("Details", new { id = review.ServiceId });
-        }
-
-        [HttpPost]
-        public IActionResult CreateReservation(Reservation reservation)
-        {
-            if (ModelState.IsValid)
-            {
-                var service = _services.FirstOrDefault(s => s.Id == reservation.ServiceId);
-                if (service != null)
-                {
-                    reservation.Id = _reservations.Count + 1;
-                    reservation.ServiceName = service.Name;
-                    reservation.Price = service.Price;
-                    _reservations.Add(reservation);
-                }
-                return RedirectToAction("Details", new { id = reservation.ServiceId });
-            }
-
-            return RedirectToAction("Details", new { id = reservation.ServiceId });
-        }
+    [HttpPost, ActionName("Delete")]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        await _serviceService.DeleteAsync(id);
+        return RedirectToAction(nameof(Index));
     }
 }

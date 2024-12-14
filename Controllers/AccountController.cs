@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using ServicesPlatform.Data.Models;
+using ServicesPlatform.Models;
+using ServicesPlatform.Models.InputModels;
 using System.Threading.Tasks;
 
 namespace ReservationPlatform.Controllers
@@ -17,66 +19,72 @@ namespace ReservationPlatform.Controllers
         }
 
         [HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Login(LoginInputModel model)
         {
-            if (ModelState.IsValid)
+            var user = _userManager.FindByEmailAsync(model.Email).Result;
+            var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
+            if (isPasswordValid)
             {
-                var user = new ApplicationUser
-                {
-                    UserName = model.Email,
-                    Email = model.Email,
-                };
-
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home"); // Пренасочване към началната страница
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
+                await _signInManager.SignInAsync(user, false);
+                return View();
             }
-            return View(model);
-        }
+            else
+            {
+                ModelState.AddModelError("Password", "Invalid password");
+            }
 
-        [HttpGet]
-        public IActionResult Login()
-        {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register(RegisterInputModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("Index", "Home"); // Пренасочване към началната страница
-                }
-
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                return View(model);
             }
+
+            var user = new ApplicationUser
+            {
+                UserName = model.Email,
+                Email = model.Email
+            };
+       
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+           
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home"); 
+            }
+       
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
             return View(model);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Logout()
-        {
-            await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
-        }
+
     }
-}
+        }
+  
+        
+        
+ 

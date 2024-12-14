@@ -34,20 +34,32 @@ namespace ReservationPlatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginInputModel model)
         {
-            var user = _userManager.FindByEmailAsync(model.Email).Result;
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                ModelState.AddModelError("Email", "Invalid email");
+                return View(model);
+            }
+
             var isPasswordValid = await _userManager.CheckPasswordAsync(user, model.Password);
             if (isPasswordValid)
             {
                 await _signInManager.SignInAsync(user, false);
-                return View();
+                return RedirectToAction("Index", "Home");
             }
             else
             {
                 ModelState.AddModelError("Password", "Invalid password");
             }
 
-            return View();
+            return View(model);
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -63,16 +75,16 @@ namespace ReservationPlatform.Controllers
                 UserName = model.Email,
                 Email = model.Email
             };
-       
+
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-           
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home"); 
+                return RedirectToAction("Index", "Home");
             }
-       
+
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
@@ -92,7 +104,6 @@ namespace ReservationPlatform.Controllers
 
     }
 }
-  
-        
-        
- 
+
+
+

@@ -38,6 +38,8 @@ builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

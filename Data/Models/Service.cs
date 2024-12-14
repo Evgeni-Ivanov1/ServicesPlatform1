@@ -13,7 +13,6 @@ namespace ServicesPlatform.Data.Models
         public string ImageUrl { get; set; }
         public string Availability { get; set; }
         public DateTime CreatedOn { get; set; }
-
-
+        public ICollection<Review> Reviews { get; set; }
     }
 }

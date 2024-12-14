@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServicesPlatform.Data.Models
 {
@@ -9,9 +11,12 @@ namespace ServicesPlatform.Data.Models
         [Required]
         public int ServiceId { get; set; }
 
+        public Service Service { get; set; }
+
         [Required]
-        [StringLength(100)]
-        public string Username { get; set; }
+        public string UserId { get; set; }
+
+        public ApplicationUser User { get; set; }
 
         [Required]
         [StringLength(500)]

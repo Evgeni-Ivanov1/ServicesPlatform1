@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ReservationPlatform.Common;
 
 namespace ServicesPlatform.Data.Models
 {
@@ -19,7 +20,8 @@ namespace ServicesPlatform.Data.Models
         public ApplicationUser User { get; set; }
 
         [Required]
-        [StringLength(500)]
+        [MaxLength(ValidationConstants.CommentMaxLength)]
+        [MinLength(ValidationConstants.CommentMinLength)]
         public string Comment { get; set; }
 
         [Required]

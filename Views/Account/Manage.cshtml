@@ -1,0 +1,127 @@
+﻿@model ServicesPlatform.Models.ViewModels.ManageAccountViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string section = ViewData["Section"]?.ToString() ?? "Profile";
+}
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success text-center">
+        @TempData["SuccessMessage"]
+    </div>
+}
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger text-center">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="container py-5">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Account Settings</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item @(section == "Profile" ? "active" : "")">
+                        <a asp-action="Manage" asp-route-section="Profile" class="text-decoration-none text-dark">
+                            <i class="bi bi-person-circle"></i> Profile
+                        </a>
+                    </li>
+                    <li class="list-group-item @(section == "Email" ? "active" : "")">
+                        <a asp-action="Manage" asp-route-section="Email" class="text-decoration-none text-dark">
+                            <i class="bi bi-envelope"></i> Email
+                        </a>
+                    </li>
+                    <li class="list-group-item @(section == "Password" ? "active" : "")">
+                        <a asp-action="Manage" asp-route-section="Password" class="text-decoration-none text-dark">
+                            <i class="bi bi-key"></i> Password
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    @if (section == "Profile")
+                    {
+                        <h3 class="text-center mb-4">Profile</h3>
+                        <form asp-action="UpdateProfile" method="post">
+                            <div class="card border-light shadow-sm p-4">
+                                <div class="form-group mb-3">
+                                    <label asp-for="Name" class="form-label">Name</label>
+                                    <input asp-for="Name" class="form-control rounded-pill" />
+                                    <span asp-validation-for="Name" class="text-danger"></span>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                                    <input asp-for="PhoneNumber" class="form-control rounded-pill" />
+                                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-5">
+                                        <i class="bi bi-save"></i> Save
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+
+
+                    }
+                    else if (section == "Email")
+                    {
+                        <h3 class="text-center mb-4">Manage Email</h3>
+                        <form asp-action="ChangeEmail" method="post">
+                            <div class="card border-light shadow-sm p-4">
+                                <div class="form-group mb-3">
+                                    <label for="currentEmail" class="form-label">Current Email</label>
+                                    <input id="currentEmail" value="@Model.Email" class="form-control rounded-pill" disabled />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="NewEmail" class="form-label"></label>
+                                    <input asp-for="NewEmail" class="form-control rounded-pill" />
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-5">
+                                        <i class="bi bi-envelope-check"></i> Change email
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else if (section == "Password")
+                    {
+                        <h3 class="text-center mb-4">Change Password</h3>
+                        <form asp-action="ChangePassword" method="post">
+                            <div class="card border-light shadow-sm p-4">
+                                <div class="form-group mb-3">
+                                    <label asp-for="CurrentPassword" class="form-label"></label>
+                                    <input asp-for="CurrentPassword" class="form-control rounded-pill" type="password" autocomplete="new-password" />
+
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="NewPassword" class="form-label"></label>
+                                    <input asp-for="NewPassword" class="form-control rounded-pill" type="password" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label asp-for="ConfirmNewPassword" class="form-label"></label>
+                                    <input asp-for="ConfirmNewPassword" class="form-control rounded-pill" type="password" />
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="btn btn-primary rounded-pill px-5">
+                                        <i class="bi bi-lock-fill"></i> Update password
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

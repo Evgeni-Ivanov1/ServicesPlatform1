@@ -11,7 +11,7 @@ namespace ReservationPlatform.Data
         public DbSet<Reservation> Reservations { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Review> Reviews { get; set; }
-
+        public string Name { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {

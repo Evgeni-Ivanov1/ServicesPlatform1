@@ -34,8 +34,7 @@ namespace ServicesPlatform.Data.Roles
                 adminUser = new ApplicationUser
                 {
                     UserName = adminEmail,
-                    Email = adminEmail,
-                    FullName = "Admin User",
+                    Email = adminEmail,                   
                 };
                 var result = await _userManager.CreateAsync(adminUser, "Admin123!");
                 if (result.Succeeded)

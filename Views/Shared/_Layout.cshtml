@@ -3,45 +3,62 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Reservation Platform</title>
+    <title>@ViewData["Title"] - UServe</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="/css/site.css" />
+    <link rel="stylesheet" href="/css/siteBar.css" />
+    
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav class="navbar navbar-expand-lg">
             <div class="container">
-                <a class="navbar-brand" asp-controller="Home" asp-action="Index">Reservation Platform</a>
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span>US</span><span>erve</span>
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse justify-content-end">
+                <div class="collapse navbar-collapse">
                     <ul class="navbar-nav">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Manage">
-                                    @User.Identity.Name
-                                </a>
+                                <a class="nav-link services" asp-controller="Service" asp-action="Index">Services</a>
                             </li>
                             <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post">
-                                    <button class="btn btn-link nav-link" type="submit">Logout</button>
-                                </form>
+                                <a class="nav-link reservations" asp-controller="Reservation" asp-action="MyReservations">Manage Reservations</a>
                             </li>
+                        }
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link category" asp-controller="Category" asp-action="Index">Category</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link about" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                    </ul>
+                    <div class="nav-item user-info">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="nav-link" asp-controller="Account" asp-action="Manage">
+                                <i class="bi bi-person-circle"></i> @User.Identity.Name
+                            </a>
+                            <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <button class="btn btn-danger btn-sm" type="submit">Logout</button>
+                            </form>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
-                            </li>
+                            <a class="nav-link" asp-controller="Account" asp-action="Login">Login</a>
+                            <a class="nav-link" asp-controller="Account" asp-action="Register">Register</a>
                         }
-                    </ul>
+                    </div>
                 </div>
             </div>
         </nav>
@@ -51,8 +68,8 @@
         @RenderBody()
     </main>
 
-    <footer class="text-center mt-4">
-        <p>&copy; 2024 Reservation Platform</p>
+    <footer class="footer text-center mt-4">
+        <p>&copy; 2024 <span style="color: #00b4d8; font-weight: bold;">US</span><span style="color: #90e0ef; font-weight: bold;">erve</span></p>
     </footer>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>

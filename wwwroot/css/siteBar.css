@@ -1,0 +1,67 @@
+﻿
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.navbar {
+    background: linear-gradient(to right, #a2faf3, #51cf5d);
+}
+
+    .navbar .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+        .navbar .navbar-brand span:first-child {
+            color: #00b4d8;
+        }
+
+        .navbar .navbar-brand span:last-child {
+            color: #7bd2e3;
+        }
+
+        .navbar .navbar-brand:hover {
+            -webkit-text-fill-color: white; /* Промяна на цвета на текста при hover */
+            transform: scale(1.1);
+            background: none; /* Скриване на градиента */
+        }
+
+    .navbar .nav-link {
+        font-size: 1rem;
+        font-weight: bold;
+        margin: 0 5px;
+        text-align: center;
+        color: white;
+        background: linear-gradient(to right, #029cba, #00caf2); /* Преливка */
+        -webkit-background-clip: text; /* Текстът получава градиентен фон */
+        -webkit-text-fill-color: transparent; /* Прозрачен текст */
+        transition: all 0.3s ease; /* Гладък преход при hover */
+    }
+
+        .navbar .nav-link:hover {
+            -webkit-text-fill-color: white; /* Промяна на цвета на текста при hover */
+            transform: scale(1.1);
+            background: none; /* Скриване на градиента */
+        }
+
+    .navbar .nav-item.user-info {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+    }
+
+    .navbar .user-info .nav-link {
+        margin-right: 10px;
+        color: black !important; /* Черен цвят за имейла */
+    }
+
+.footer {
+    background-color: #f8f9fa;
+    padding: 10px 0;
+}
+
+    .footer p {
+        margin: 0;
+        color: #6c757d;
+        </style>

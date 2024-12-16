@@ -29,60 +29,59 @@ namespace ReservationPlatform.Controllers
             return View(reviews);
         }
 
+      [HttpPost]
+[Authorize]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> Create(AddReviewInputModel model)
+{
+    if (!ModelState.IsValid)
+    {
+        return BadRequest(ModelState);
+    }
+
+    var user = await _userManager.GetUserAsync(User); // Вземаме логнатия потребител
+    if (user == null)
+    {
+        return Unauthorized();
+    }
+
+    await _reviewService.AddReviewAsync(new AddReviewInputModel
+    {
+        ServiceId = model.ServiceId,
+        UserName = user.UserName, // Взима се от логнатия потребител
+        Comment = model.Comment,
+        Rating = model.Rating
+    }, user.Id);
+
+    return RedirectToAction("Details", "Service", new { id = model.ServiceId });
+}
+
+
+
+        [HttpGet]
         [HttpPost]
         [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(AddReviewInputModel model)
+        public async Task<IActionResult> Edit(int reviewId, string comment, int rating)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var userId = User.Identity.Name;
-
-            await _reviewService.AddReviewAsync(new AddReviewInputModel
-            {
-                ServiceId = model.ServiceId,
-                UserName = model.UserName,
-                Comment = model.Comment,
-                Rating = model.Rating
-            }, userId);
-     
-            return RedirectToAction("Details", "Service", new { id = model.ServiceId });
-        }
-
-
-
-        [HttpGet]
-        [Authorize]
-        public async Task<IActionResult> Edit(int reviewId)
-        {
             var review = await _reviewService.GetReviewByIdAsync(reviewId);
             if (review == null) return NotFound();
 
-            var model = new AddReviewInputModel
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (review.UserId != userId && !User.IsInRole("Administrator"))
             {
-                ServiceId = review.ServiceId,
-                UserName = review.UserName,
-                Comment = review.Comment,
-                Rating = review.Rating
-            };
-            return View("Details", model); 
+                return Forbid();
+            }
+
+            await _reviewService.UpdateReviewAsync(reviewId, comment, rating);
+
+            return RedirectToAction("Details", "Service", new { id = review.ServiceId });
         }
 
-        [HttpPost]
-        [Authorize]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int reviewId, AddReviewInputModel model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            await _reviewService.UpdateReviewAsync(reviewId, model.Comment, model.Rating);
-
-            return RedirectToAction("Details", "Service", new { id = model.ServiceId });
-        }
 
 
         [HttpPost]

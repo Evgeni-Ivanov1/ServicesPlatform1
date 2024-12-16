@@ -32,26 +32,28 @@
         <div class="list-group mx-auto" style="max-width: 600px;">
             @foreach (var review in Model.Reviews)
             {
-                <div class="list-group-item">
+                <div class="list-group-item mb-2">
                     <h5>@review.UserName</h5>
                     <p>@review.Comment</p>
                     <span class="badge bg-primary">@review.Rating / 5</span>
 
-                    <!-- Проверка дали потребителят е създателят на ревюто или администратор -->
+                    <!-- Edit и Delete бутони -->
                     @if (User.Identity.IsAuthenticated &&
                    (review.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value
                    || User.IsInRole("Administrator")))
                     {
                         <div class="mt-2">
-                            <form method="post" asp-controller="Review" asp-action="Edit" class="d-inline">
-                                <input type="hidden" name="reviewId" value="@review.Id" />
-                                <input type="text" name="comment" placeholder="Edit your comment" required />
-                                <input type="number" name="rating" value="@review.Rating" min="1" max="5" required />
-                                <button type="submit" class="btn btn-sm btn-warning">Edit</button>
-                            </form>
+                            <!-- Edit Button -->
+                            <button class="btn btn-sm edit-button"
+                                    data-review-id="@review.Id"
+                                    data-comment="@review.Comment"
+                                    data-rating="@review.Rating">
+                                Edit
+                            </button>
+                            <!-- Delete Form -->
                             <form method="post" asp-controller="Review" asp-action="Delete" class="d-inline">
                                 <input type="hidden" name="reviewId" value="@review.Id" />
-                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-sm delete-button">Delete</button>
                             </form>
                         </div>
                     }
@@ -65,6 +67,27 @@
     }
 </div>
 
+<!-- Скрито поле за Edit Review -->
+<div class="mt-4 mx-auto" style="max-width: 600px; display: none;" id="editReviewFormContainer">
+    <h4>Edit Review</h4>
+    <form method="post" asp-controller="Review" asp-action="Edit">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="reviewId" id="editReviewId" />
+        <div class="mb-3">
+            <label for="ReviewUserName" class="form-label">Name</label>
+            <input type="text" class="form-control" name="UserName" id="ReviewUserName" placeholder="Enter your name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="editReviewRating" class="form-label">Rating</label>
+            <input type="number" class="form-control" name="rating" id="editReviewRating" min="1" max="5" required />
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+    </form>
+</div>
+
+<!-- Форма за Add Review -->
 <div class="mt-4 mx-auto" style="max-width: 600px;">
     <form asp-controller="Review" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
@@ -84,3 +107,50 @@
         <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
 </div>
+
+<!-- Скрипт за показване на Edit форма -->
+@section Scripts {
+    <script>
+        document.querySelectorAll('.edit-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('editReviewId').value = this.getAttribute('data-review-id');
+                document.getElementById('editReviewComment').value = this.getAttribute('data-comment');
+                document.getElementById('editReviewRating').value = this.getAttribute('data-rating');
+                document.getElementById('editReviewFormContainer').style.display = 'block';
+            });
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', function () {
+            document.getElementById('editReviewFormContainer').style.display = 'none';
+        });
+    </script>
+}
+
+<!-- Стилове за Edit и Delete бутони -->
+<style>
+    .edit-button, .delete-button {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .edit-button {
+        background-color: #28a745; /* Зелен цвят */
+        border-color: #28a745;
+        color: white;
+    }
+
+        .edit-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+        }
+
+    .delete-button {
+        background-color: #dc3545; /* Червен цвят */
+        border-color: #dc3545;
+        color: white;
+    }
+
+        .delete-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+        }
+</style>

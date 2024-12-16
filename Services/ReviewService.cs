@@ -29,6 +29,9 @@ namespace ServicesPlatform.Services
 
         public async Task AddReviewAsync(AddReviewInputModel dto, string userId)
         {
+            if (string.IsNullOrWhiteSpace(dto.Comment))
+                throw new ArgumentException("Comment cannot be empty.");
+
             var review = new Review
             {
                 ServiceId = dto.ServiceId,
@@ -37,9 +40,9 @@ namespace ServicesPlatform.Services
                 Comment = dto.Comment,
                 Rating = dto.Rating
             };
-
             await _reviewRepository.AddReviewAsync(review);
         }
+
 
 
         public async Task UpdateReviewAsync(int reviewId, string comment, int rating)

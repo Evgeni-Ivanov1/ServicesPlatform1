@@ -29,32 +29,30 @@ namespace ReservationPlatform.Controllers
             return View(reviews);
         }
 
-      [HttpPost]
-[Authorize]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> Create(AddReviewInputModel model)
-{
-    if (!ModelState.IsValid)
-    {
-        return BadRequest(ModelState);
-    }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(AddReviewInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Details", "Service", new { id = model.ServiceId });
+            }
 
-    var user = await _userManager.GetUserAsync(User); // Вземаме логнатия потребител
-    if (user == null)
-    {
-        return Unauthorized();
-    }
+            // Извличаме UserId от текущия потребител
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
 
-    await _reviewService.AddReviewAsync(new AddReviewInputModel
-    {
-        ServiceId = model.ServiceId,
-        UserName = user.UserName, // Взима се от логнатия потребител
-        Comment = model.Comment,
-        Rating = model.Rating
-    }, user.Id);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // Ако потребителят не е логнат
+            }
 
-    return RedirectToAction("Details", "Service", new { id = model.ServiceId });
-}
+            // Добавяме ревю
+            await _reviewService.AddReviewAsync(model, userId);
+
+            return RedirectToAction("Details", "Service", new { id = model.ServiceId });
+        }
+
+
 
 
 

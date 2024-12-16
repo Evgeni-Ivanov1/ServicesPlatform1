@@ -1,10 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ReservationPlatform.Data;
-using ServicesPlatform.Contracts.Repositories;
-using ServicesPlatform.Contracts.Services;
-using ServicesPlatform.Data.Models;
+﻿using ServicesPlatform.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using ReservationPlatform.Data;
+using ServicesPlatform.Contracts.Repositories;
 
 public class ServiceRepository : IServiceRepository
 {
@@ -17,24 +16,24 @@ public class ServiceRepository : IServiceRepository
 
     public async Task<IEnumerable<Service>> GetAllAsync()
     {
-        return await _context.Services.ToListAsync();
+        return await _context.Services.Include(s => s.Category).ToListAsync();
     }
-           
+
     public async Task<Service> GetByIdAsync(int id)
     {
-        return await _context.Services.FindAsync(id);
+        return await _context.Services.Include(s => s.Category).FirstOrDefaultAsync(s => s.Id == id);
     }
 
     public async Task<Service> CreateAsync(Service service)
     {
-        _context.Services.Add(service);
+        var result = await _context.Services.AddAsync(service);
         await _context.SaveChangesAsync();
-        return service;
+        return result.Entity;
     }
 
     public async Task<Service> UpdateAsync(Service service)
     {
-        _context.Services.Update(service);
+        _context.Entry(service).State = EntityState.Modified;
         await _context.SaveChangesAsync();
         return service;
     }
@@ -48,4 +47,12 @@ public class ServiceRepository : IServiceRepository
             await _context.SaveChangesAsync();
         }
     }
+    public async Task<Service> GetByIdWithReviewsAsync(int id)
+    {
+        return await _context.Services
+            .Include(s => s.Reviews)
+            .ThenInclude(r => r.User) 
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
 }

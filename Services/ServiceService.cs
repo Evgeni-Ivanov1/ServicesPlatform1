@@ -1,9 +1,10 @@
-﻿using ServicesPlatform.Data.Models;
+﻿using ServicesPlatform.Contracts.Repositories;
+using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Data.Models;
+using ServicesPlatform.Models.InputModels.Service;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System;
-using ServicesPlatform.Contracts.Repositories;
-using ServicesPlatform.Contracts.Services;
 
 public class ServiceService : IServiceService
 {
@@ -18,6 +19,10 @@ public class ServiceService : IServiceService
     {
         return await _serviceRepository.GetAllAsync();
     }
+    public async Task<Service> GetByIdWithReviewsAsync(int id)
+    {
+        return await _serviceRepository.GetByIdWithReviewsAsync(id);
+    }
 
     public async Task<Service> GetByIdAsync(int id)
     {
@@ -31,7 +36,7 @@ public class ServiceService : IServiceService
             Name = model.Name,
             Description = model.Description,
             Price = model.Price,
-            Category = model.Category,
+            CategoryId = model.CategoryId,
             ImageUrl = model.ImageUrl,
             Availability = model.Availability,
             CreatedOn = DateTime.Now
@@ -40,7 +45,8 @@ public class ServiceService : IServiceService
         return await _serviceRepository.CreateAsync(service);
     }
 
-    public async Task<Service> UpdateAsync(UpdateServiceInputModel model)
+
+public async Task<Service> UpdateAsync(UpdateServiceInputModel model)
     {
         var service = await _serviceRepository.GetByIdAsync(model.Id);
         if (service == null)
@@ -51,7 +57,7 @@ public class ServiceService : IServiceService
         service.Name = model.Name;
         service.Description = model.Description;
         service.Price = model.Price;
-        service.Category = model.Category;
+        service.CategoryId = model.CategoryId;
         service.ImageUrl = model.ImageUrl;
         service.Availability = model.Availability;
 

@@ -1,12 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using ServicesPlatform.Models.InputModels.Service;
 using ServicesPlatform.Data.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public interface IServiceService
+namespace ServicesPlatform.Contracts.Services
 {
-    Task<IEnumerable<Service>> GetAllAsync();
-    Task<Service> GetByIdAsync(int id);
-    Task<Service> CreateAsync(CreateServiceInputModel model);
-    Task<Service> UpdateAsync(UpdateServiceInputModel model);
-    Task DeleteAsync(int id);
+    public interface IServiceService
+    {
+        Task<IEnumerable<Service>> GetAllAsync();
+        Task<Service> GetByIdAsync(int id);
+   
+        Task<Service> GetByIdWithReviewsAsync(int id);
+ 
+        Task<Service> CreateAsync(CreateServiceInputModel model); 
+        Task<Service> UpdateAsync(UpdateServiceInputModel model);
+        Task DeleteAsync(int id);
+    }
 }

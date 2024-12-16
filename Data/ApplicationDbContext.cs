@@ -33,6 +33,22 @@ namespace ReservationPlatform.Data
                .WithMany(u => u.Reviews)
                .HasForeignKey(r => r.ServiceId)
                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Service>()
+    .HasMany(s => s.Reviews)
+    .WithOne(r => r.Service)
+    .HasForeignKey(r => r.ServiceId)
+    .OnDelete(DeleteBehavior.Cascade);
+
+
+            // ???????????? ?? Service ? Category
+            modelBuilder.Entity<Service>()
+                .HasOne(s => s.Category)
+                .WithMany(c => c.Services)
+                .HasForeignKey(s => s.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

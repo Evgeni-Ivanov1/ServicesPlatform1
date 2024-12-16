@@ -11,7 +11,7 @@
         public const int CommentMaxLength = 500;
 
         //Category
-        public const int CategoryMaxlenght = 50;
+        public const int CategoryMaxlenght = 450;
 
         //ManageAccountViewModel
         public const int PhoneNumberMaxLength = 10;

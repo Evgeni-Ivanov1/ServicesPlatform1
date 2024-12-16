@@ -1,53 +1,54 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using ServicesPlatform.Data.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Models.InputModels.Reservation;
+using System.Threading.Tasks;
 
 namespace ReservationPlatform.Controllers
 {
     public class ReservationController : Controller
     {
-        private static readonly List<Reservation> _reservations = new List<Reservation>();
+        private readonly IReservationService _service;
 
-        public IActionResult MyReservations()
+        public ReservationController(IReservationService service)
         {
-            return View(_reservations);
+            _service = service;
         }
 
+        public async Task<IActionResult> MyReservations()
+        {
+            var reservations = await _service.GetAllAsync();
+            return View(reservations);
+        }
+
+        [HttpGet]
         public IActionResult Create(string serviceName, decimal price)
         {
-            var model = new Reservation
+            var model = new CreateReservationInputModel
             {
                 ServiceName = serviceName,
                 Price = price,
-                ReservationDate = DateTime.Now
+                ReservationDate = System.DateTime.Now
             };
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Create(Reservation model)
+        public async Task<IActionResult> Create(CreateReservationInputModel model)
         {
             if (ModelState.IsValid)
             {
-                _reservations.Add(model);
-                TempData["ReservationSuccess"] = $"Reservation for {model.ServiceName} on {model.ReservationDate.ToShortDateString()} has been successfully created.";
-                return RedirectToAction("MyReservations");
+                await _service.CreateAsync(model);
+                TempData["Message"] = $"Reservation for {model.ServiceName} was successfully created.";
+                return RedirectToAction(nameof(MyReservations));
             }
-
             return View(model);
         }
 
-        public IActionResult Cancel(int id)
+        public async Task<IActionResult> Cancel(int id)
         {
-            var reservation = _reservations.FirstOrDefault(r => r.Id == id);
-            if (reservation != null)
-            {
-                _reservations.Remove(reservation);
-                TempData["Message"] = $"Reservation with ID {id} was canceled.";
-            }
-            return RedirectToAction("MyReservations");
+            await _service.DeleteAsync(id);
+            TempData["Message"] = $"Reservation was successfully canceled.";
+            return RedirectToAction(nameof(MyReservations));
         }
     }
 }

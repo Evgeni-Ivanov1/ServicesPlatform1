@@ -20,6 +20,10 @@ namespace ServicesPlatform.Data.Models
         public ApplicationUser User { get; set; }
 
         [Required]
+        [MaxLength(30)]
+        public string UserName { get; set; }
+
+        [Required]
         [MaxLength(ValidationConstants.CommentMaxLength)]
         [MinLength(ValidationConstants.CommentMinLength)]
         public string Comment { get; set; }

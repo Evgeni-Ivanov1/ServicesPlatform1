@@ -1,13 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using ReservationPlatform.Data;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Models;
 using ServicesPlatform.Models.InputModels.Category;
-using ServicesPlatform.Services;
+using ServicesPlatform.Models.OutputModels.Category;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReservationPlatform.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categoryService;
@@ -23,25 +25,41 @@ namespace ReservationPlatform.Controllers
             return View(categories);
         }
 
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> Create(CreateCategoryInputModel model)
         {
-            var addedCategory = await _categoryService.CreateAsync(model);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-            return View(addedCategory);
+            await _categoryService.CreateAsync(model);       
+            return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
         public async Task<IActionResult> Edit(UpdateCategoryInputModel model)
         {
-            var categories = await _categoryService.UpdateAsync(model);
+            if (!ModelState.IsValid)
+            {
+                return Json(new { success = false });
+            }
 
-            return View(categories);
+            await _categoryService.UpdateAsync(model);
+            return Json(new { success = true});
         }
 
+        [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             await _categoryService.DeleteAsync(id);
-
-            return View();
+            return Json(new { success = true });
         }
     }
 }

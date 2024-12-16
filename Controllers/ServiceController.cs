@@ -1,103 +1,77 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Models.InputModels.Service;
+using ServicesPlatform.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 public class ServiceController : Controller
 {
-    [HttpGet]
-    public IActionResult Add()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Add(CreateServiceInputModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            await _serviceService.CreateAsync(model);
-            return RedirectToAction("Index");
-        }
-
-        return View(model);
-    }
-
     private readonly IServiceService _serviceService;
+    private readonly ICategoryService _categoryService;
 
-    public ServiceController(IServiceService serviceService)
+
+    public ServiceController(IServiceService serviceService, ICategoryService categoryService)
     {
         _serviceService = serviceService;
+        _categoryService = categoryService;
     }
+  
 
     public async Task<IActionResult> Index()
     {
         var services = await _serviceService.GetAllAsync();
         return View(services);
     }
+ public async Task<IActionResult> Details(int id)
+{
+    var service = await _serviceService.GetByIdWithReviewsAsync(id);
 
-    public async Task<IActionResult> Details(int id)
+    if (service == null)
     {
-        var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
-        return View(service);
+        return NotFound();
     }
 
-    public IActionResult Create()
-    {
-        return View();
-    }
+    return View(service);
+}
 
-    [HttpPost]
-    public async Task<IActionResult> Create(CreateServiceInputModel model)
+
+    [HttpGet]
+    public async Task<IActionResult> Add()
     {
-        if (ModelState.IsValid)
+        var categories = await _categoryService.GetAllAsync();
+        var viewModel = new CreateServiceInputModel
         {
-            await _serviceService.CreateAsync(model);
-            return RedirectToAction(nameof(Index));
-        }
-        return View(model);
-    }
-
-    public async Task<IActionResult> Edit(int id)
-    {
-        var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
-
-        var model = new UpdateServiceInputModel
-        {
-            Id = service.Id,
-            Name = service.Name,
-            Description = service.Description,
-            Price = service.Price,
-            Category = service.Category,
-            ImageUrl = service.ImageUrl,
-            Availability = service.Availability
+            Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList()
         };
-        return View(model);
+
+        return View(viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(UpdateServiceInputModel model)
+    public async Task<IActionResult> Add(CreateServiceInputModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            await _serviceService.UpdateAsync(model);
-            return RedirectToAction(nameof(Index));
+            var categories = await _categoryService.GetAllAsync();
+            model.Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList();
+
+            return View(model);
         }
-        return View(model);
-    }
 
-    public async Task<IActionResult> Delete(int id)
-    {
-        var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
-        return View(service);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        await _serviceService.DeleteAsync(id);
+        await _serviceService.CreateAsync(model);
+        TempData["SuccessMessage"] = "Service added successfully.";
         return RedirectToAction(nameof(Index));
     }
+ 
+
 }

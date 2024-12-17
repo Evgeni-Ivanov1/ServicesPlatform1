@@ -1,11 +1,13 @@
-﻿using ServicesPlatform.Models.InputModels.Review;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ServicesPlatform.Data.Models;
+using ServicesPlatform.Models.InputModels.Review;
 
-namespace ServicesPlatform.Contracts.Services
+public interface IReviewService
 {
-    public interface IReviewService
-    {
-        Task AddReviewAsync(AddReviewInputModel dto, string userId);
-    }
-
+    Task<IEnumerable<Review>> GetReviewsByServiceIdAsync(int serviceId);
+    Task<Review> GetReviewByIdAsync(int reviewId);
+    Task AddReviewAsync(AddReviewInputModel dto, string userId);
+    Task UpdateReviewAsync(int reviewId, string comment, int rating);
+    Task DeleteReviewAsync(int reviewId);
 }

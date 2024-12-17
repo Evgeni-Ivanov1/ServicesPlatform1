@@ -1,12 +1,12 @@
-﻿using ServicesPlatform.Data.Models;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using ServicesPlatform.Data.Models;
 
-namespace ServicesPlatform.Contracts.Repositories
+public interface IReviewRepository
 {
-    public interface IReviewRepository
-    {
-        Task AddReviewAsync(Review review);
-        
-        Task SaveChangesAsync();
-    }
+    Task<List<Review>> GetByServiceIdAsync(int serviceId);
+    Task AddReviewAsync(Review review);
+    Task<Review> GetByIdAsync(int reviewId);
+    Task UpdateReviewAsync(Review review);
+    Task DeleteReviewAsync(int reviewId);
 }

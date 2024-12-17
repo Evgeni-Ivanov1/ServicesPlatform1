@@ -13,5 +13,15 @@ namespace ReservationPlatform.Controllers
         {
             return View();
         }
+        public IActionResult CookiesPolicy()
+        {
+            return View();
+        }
+
+        public IActionResult PrivacyPolicy()
+        {
+            return View();
+        }
+
     }
 }

@@ -30,6 +30,7 @@ namespace ServicesPlatform.Data.Repositories
         public async Task<Category> CreateAsync(Category category)
         {
             var categpry = await _context.Categories.AddAsync(category);
+            await _context.SaveChangesAsync();
 
             return category;
         }

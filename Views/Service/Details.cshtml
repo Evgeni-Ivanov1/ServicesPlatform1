@@ -2,7 +2,6 @@
 @model Service
 
 @{
-
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -15,7 +14,7 @@
 </div>
 
 <div class="d-flex justify-content-center mb-3">
-    <a class="btn btn-primary me-2" A
+    <a class="btn btn-primary me-2"
        asp-controller="Reservation"
        asp-action="Create"
        asp-route-serviceName="@Model.Name"
@@ -25,20 +24,38 @@
     <a class="btn btn-secondary" asp-controller="Service" asp-action="Index">Back to Services</a>
 </div>
 
-<hr />
-
 <h2 class="text-center">Reviews</h2>
 
 <div class="text-center">
-    @if (Model.Reviews.Any())
+    @if (Model.Reviews != null && Model.Reviews.Any())
     {
         <div class="list-group mx-auto" style="max-width: 600px;">
             @foreach (var review in Model.Reviews)
             {
-                <div class="list-group-item">
-                    @* <h5>@review.Username</h5> *@
+                <div class="list-group-item mb-2">
+                    <h5>@review.UserName</h5>
                     <p>@review.Comment</p>
-                    <span class="badge bg-primary">@review.Rating/5</span>
+                    <span class="badge bg-primary">@review.Rating / 5</span>
+                 
+                    @if (User.Identity.IsAuthenticated &&
+                   (review.UserId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value
+                   || User.IsInRole("Administrator")))
+                    {
+                        <div class="mt-2">
+                            <!-- Edit Button -->
+                            <button class="btn btn-sm edit-button"
+                                    data-review-id="@review.Id"
+                                    data-comment="@review.Comment"
+                                    data-rating="@review.Rating">
+                                Edit
+                            </button>
+                            <!-- Delete Form -->
+                            <form method="post" asp-controller="Review" asp-action="Delete" class="d-inline">
+                                <input type="hidden" name="reviewId" value="@review.Id" />
+                                <button type="submit" class="btn btn-sm delete-button">Delete</button>
+                            </form>
+                        </div>
+                    }
                 </div>
             }
         </div>
@@ -49,10 +66,34 @@
     }
 </div>
 
+<!--  Edit Review -->
+<div class="mt-4 mx-auto" style="max-width: 600px; display: none;" id="editReviewFormContainer">
+    <h4>Edit Review</h4>
+    <form method="post" asp-controller="Review" asp-action="Edit">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="reviewId" id="editReviewId" />
+        <div class="mb-3">
+            <label for="editReviewComment" class="form-label">Your Review</label>
+            <textarea class="form-control" name="comment" id="editReviewComment" rows="3" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="editReviewRating" class="form-label">Rating</label>
+            <input type="number" class="form-control" name="rating" id="editReviewRating" min="1" max="5" required />
+        </div>
+        <button type="submit" class="btn btn-success">Save Changes</button>
+        <button type="button" class="btn btn-secondary" id="cancelEdit">Cancel</button>
+    </form>
+</div>
+
+<!-- Add Review -->
 <div class="mt-4 mx-auto" style="max-width: 600px;">
     <form asp-controller="Review" asp-action="Create" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" name="ServiceId" value="@Model.Id" />
+        <div class="mb-3">
+            <label for="ReviewUserName" class="form-label">Name</label>
+            <input type="text" class="form-control" name="UserName" id="ReviewUserName" required />
+        </div>
         <div class="mb-3">
             <label for="ReviewComment" class="form-label">Your Review</label>
             <textarea class="form-control" name="Comment" id="ReviewComment" rows="3" required></textarea>
@@ -64,3 +105,50 @@
         <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
 </div>
+
+<!-- Edit  -->
+@section Scripts {
+    <script>
+        document.querySelectorAll('.edit-button').forEach(button => {
+            button.addEventListener('click', function () {
+                document.getElementById('editReviewId').value = this.getAttribute('data-review-id');
+                document.getElementById('editReviewComment').value = this.getAttribute('data-comment');
+                document.getElementById('editReviewRating').value = this.getAttribute('data-rating');
+                document.getElementById('editReviewFormContainer').style.display = 'block';
+            });
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', function () {
+            document.getElementById('editReviewFormContainer').style.display = 'none';
+        });
+    </script>
+}
+
+<!-- Стилове за Edit и Delete бутони -->
+<style>
+    .edit-button, .delete-button {
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .edit-button {
+        background-color: #28a745; /* Зелен цвят */
+        border-color: #28a745;
+        color: white;
+    }
+
+    .edit-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
+    }
+
+    .delete-button {
+        background-color: #dc3545; /* Червен цвят */
+        border-color: #dc3545;
+        color: white;
+    }
+
+    .delete-button:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
+    }
+</style>

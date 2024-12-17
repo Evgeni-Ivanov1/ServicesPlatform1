@@ -23,11 +23,23 @@
             <tr>
                 <td>@service.Name</td>
                 <td>@service.Description</td>
-                <td>@service.Category</td>
+                <td>@service.Category?.Name</td>
                 <td>@service.Price.ToString("C")</td>
                 <td>
                     <a class="btn btn-info" asp-controller="Service" asp-action="Details" asp-route-id="@service.Id">View Details</a>
+
+                    @if (User.Identity.IsAuthenticated &&
+                   (service.OwnerId == User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value || User.IsInRole("Administrator")))
+                    {
+                        <a class="btn btn-warning ms-2" asp-controller="Service" asp-action="Edit" asp-route-id="@service.Id">Edit</a>
+
+                        <form method="post" asp-controller="Service" asp-action="Delete" asp-route-id="@service.Id" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger ms-2" onclick="return confirm('Are you sure you want to delete this service?');">Delete</button>
+                        </form>
+                    }
                 </td>
+
             </tr>
         }
     </tbody>

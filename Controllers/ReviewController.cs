@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using ServicesPlatform.Contracts.Services;
 using ServicesPlatform.Data.Models;
 using ServicesPlatform.Models.InputModels.Review;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ReservationPlatform.Controllers
 {
+    [Authorize] 
     public class ReviewController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -21,56 +21,84 @@ namespace ReservationPlatform.Controllers
             _reviewService = reviewService;
         }
 
-        private static readonly List<Review> _reviews = new List<Review>
+        [AllowAnonymous] 
+        public async Task<IActionResult> List(int serviceId)
         {
-            //new Review { Id = 1, ServiceId = 1, Username = "John Doe", Comment = "Great service!", Rating = 5 },
-            //new Review { Id = 2, ServiceId = 1, Username = "Jane Smith", Comment = "Very satisfied!", Rating = 4 }
-        };
-
-        public IActionResult List(int serviceId)
-        {
-            var serviceReviews = _reviews.Where(r => r.ServiceId == serviceId).ToList();
+            var reviews = await _reviewService.GetReviewsByServiceIdAsync(serviceId);
             ViewBag.ServiceId = serviceId;
-            return View(serviceReviews);
+            return View(reviews);
         }
 
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([FromForm] AddReviewInputModel review)
+        public async Task<IActionResult> Create(AddReviewInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Details", "Service", new { id = model.ServiceId });
+            }
+
+            // Извличаме UserId от текущия потребител
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized(); // Ако потребителят не е логнат
+            }
+
+            // Добавяме ревю
+            await _reviewService.AddReviewAsync(model, userId);
+
+            return RedirectToAction("Details", "Service", new { id = model.ServiceId });
+        }
+
+
+
+
+
+        [HttpGet]
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Edit(int reviewId, string comment, int rating)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            var review = await _reviewService.GetReviewByIdAsync(reviewId);
+            if (review == null) return NotFound();
+
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (review.UserId != userId && !User.IsInRole("Administrator"))
             {
-                return Unauthorized();
+                return Forbid();
             }
 
-            await _reviewService.AddReviewAsync(review, user.Id);
+            await _reviewService.UpdateReviewAsync(reviewId, comment, rating);
 
-            return RedirectToAction("List", new { serviceId = review.ServiceId });
+            return RedirectToAction("Details", "Service", new { id = review.ServiceId });
         }
 
-        public IActionResult Create(int serviceId)
+
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> Delete(int reviewId)
         {
-            var model = new Review { ServiceId = serviceId };
-            return View(model);
+            var user = await _userManager.GetUserAsync(User);
+            var review = await _reviewService.GetReviewByIdAsync(reviewId);
+
+            if (review == null) return NotFound();
+
+            if (review.UserId != user.Id && !User.IsInRole("Administrator"))
+            {
+                return Forbid();
+            }
+
+            await _reviewService.DeleteReviewAsync(reviewId);
+            return RedirectToAction("Details", "Service", new { id = review.ServiceId });
         }
 
-        //[HttpPost]
-        //public IActionResult Create(Review model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        model.Id = _reviews.Max(r => r.Id) + 1;
-        //        _reviews.Add(model);
-        //        return RedirectToAction("List", new { serviceId = model.ServiceId });
-        //    }
-        //    return View(model);
-        //}
     }
 }

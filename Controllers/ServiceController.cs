@@ -1,32 +1,25 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ServicesPlatform.Contracts.Services;
+using ServicesPlatform.Models.InputModels.Service;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using ServicesPlatform.Models.InputModels; 
+using ServicesPlatform.Data.Models;
 
+
+[Authorize] 
 public class ServiceController : Controller
 {
-    [HttpGet]
-    public IActionResult Add()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Add(CreateServiceInputModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            await _serviceService.CreateAsync(model);
-            return RedirectToAction("Index");
-        }
-
-        return View(model);
-    }
-
     private readonly IServiceService _serviceService;
+    private readonly ICategoryService _categoryService;
 
-    public ServiceController(IServiceService serviceService)
+    public ServiceController(IServiceService serviceService, ICategoryService categoryService)
     {
         _serviceService = serviceService;
+        _categoryService = categoryService;
     }
 
     public async Task<IActionResult> Index()
@@ -37,31 +30,72 @@ public class ServiceController : Controller
 
     public async Task<IActionResult> Details(int id)
     {
-        var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
+        var service = await _serviceService.GetByIdWithReviewsAsync(id);
+        if (service == null)
+        {
+            return NotFound();
+        }
         return View(service);
     }
 
-    public IActionResult Create()
+    // GET: Add Service (???????? ???? ?? ???????????? ??????????? ? ??????????????)
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Add()
     {
-        return View();
+        var categories = await _categoryService.GetAllAsync();
+        var viewModel = new CreateServiceInputModel
+        {
+            Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList()
+        };
+        return View(viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(CreateServiceInputModel model)
+    [Authorize]
+    public async Task<IActionResult> Add(CreateServiceInputModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            await _serviceService.CreateAsync(model);
-            return RedirectToAction(nameof(Index));
+            var categories = await _categoryService.GetAllAsync();
+            model.Categories = categories.Select(c => new SelectListItem
+            {
+                Value = c.Id.ToString(),
+                Text = c.Name
+            }).ToList();
+            return View(model);
         }
-        return View(model);
+
+        // ??????? ??????? ?????????? (OwnerId)
+        model.CreatorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        await _serviceService.CreateAsync(model);
+        TempData["SuccessMessage"] = "Service added successfully.";
+        return RedirectToAction(nameof(Index));
     }
 
+
+    // GET: Edit Service
+    [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Edit(int id)
     {
         var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
+        if (service == null)
+        {
+            return NotFound();
+        }
+
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (service.OwnerId != userId && !User.IsInRole("Administrator"))
+        {
+            return Forbid();
+        }
 
         var model = new UpdateServiceInputModel
         {
@@ -69,35 +103,57 @@ public class ServiceController : Controller
             Name = service.Name,
             Description = service.Description,
             Price = service.Price,
-            Category = service.Category,
+            CategoryId = service.CategoryId,
             ImageUrl = service.ImageUrl,
             Availability = service.Availability
         };
+
         return View(model);
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Edit(UpdateServiceInputModel model)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            await _serviceService.UpdateAsync(model);
-            return RedirectToAction(nameof(Index));
+            return View(model);
         }
-        return View(model);
+
+        var service = await _serviceService.GetByIdAsync(model.Id);
+        if (service == null) return NotFound();
+
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (service.OwnerId != userId && !User.IsInRole("Administrator"))
+        {
+            return Forbid();
+        }
+
+        await _serviceService.UpdateAsync(model);
+        TempData["SuccessMessage"] = "Service updated successfully.";
+        return RedirectToAction(nameof(Index));
     }
 
+    // POST: Delete Service
+    [HttpPost]
     public async Task<IActionResult> Delete(int id)
     {
         var service = await _serviceService.GetByIdAsync(id);
-        if (service == null) return NotFound();
-        return View(service);
-    }
+        if (service == null)
+        {
+            return NotFound();
+        }
 
-    [HttpPost, ActionName("Delete")]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
+        // ???????? ???? ???????? ?????????? ? ???????? ??? ?????????????
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (service.OwnerId != userId && !User.IsInRole("Administrator"))
+        {
+            return Forbid();
+        }
+
         await _serviceService.DeleteAsync(id);
+        TempData["SuccessMessage"] = "Service deleted successfully.";
         return RedirectToAction(nameof(Index));
     }
 }

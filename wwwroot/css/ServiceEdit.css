@@ -1,0 +1,34 @@
+﻿.text-wrap {
+    word-wrap: break-word; 
+    white-space: normal; 
+}
+
+.table th, .table td {
+    vertical-align: middle; /* съдържанието вертикално */
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn:hover {
+    opacity: 0.85;
+    transform: scale(1.05);
+    transition: all 0.2s ease-in-out;
+}

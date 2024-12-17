@@ -4,53 +4,129 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Add Service";
 }
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
 <div class="container mt-5">
-    <h2 class="text-center mb-4">Add Service</h2>
-
-    <div class="card shadow-lg p-4">
-        <form asp-action="Add" method="post">
-            <div class="form-group mb-3">
-                <label asp-for="Name" class="form-label"></label>
-                <input asp-for="Name" class="form-control" required />
-                <span asp-validation-for="Name" class="text-danger"></span>
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+          
+            <div class="text-center mb-5">
+                <h1 class="display-4 fw-bold text-primary">Add a New Service</h1>
+                <p class="lead text-muted">Provide details for your service below to get started.</p>
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Description" class="form-label"></label>
-                <textarea asp-for="Description" class="form-control" required></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
+            <div class="card shadow-lg border-0">
+                <div class="card-body p-5">
 
-            <div class="form-group mb-3">
-                <label asp-for="Price" class="form-label"></label>
-                <input asp-for="Price" type="number" step="0.01" class="form-control" required />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
+                    <!-- Form -->
+                    <form asp-action="Add" method="post">
 
-            <div class="form-group mb-3">
-                <label asp-for="CategoryId" class="form-label">Category</label>
-                <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories"></select>
-                <span asp-validation-for="CategoryId" class="text-danger"></span>
-            </div>
+                   
+                        <div class="form-group mb-4">
+                            <label asp-for="Name" class="form-label fw-bold">
+                                <i class="bi bi-briefcase-fill text-primary"></i>
+                                <span class="ms-1">Service Name</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-pencil-square text-secondary"></i>
+                                </span>
+                                <input asp-for="Name" class="form-control" placeholder="e.g., Web Development" required />
+                            </div>
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="ImageUrl" class="form-label"></label>
-                <input asp-for="ImageUrl" class="form-control" required />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
-            </div>
+             
+                        <div class="form-group mb-4">
+                            <label asp-for="Description" class="form-label fw-bold">
+                                <i class="bi bi-file-earmark-text-fill text-primary"></i>
+                                <span class="ms-1">Description</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-chat-text text-secondary"></i>
+                                </span>
+                                <textarea asp-for="Description" class="form-control" rows="4" placeholder="Briefly describe your service" required></textarea>
+                            </div>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="Availability" class="form-label"></label>
-                <input asp-for="Availability" class="form-control" required />
-                <span asp-validation-for="Availability" class="text-danger"></span>
-            </div>
+  
+                        <div class="form-group mb-4">
+                            <label asp-for="Price" class="form-label fw-bold">
+                                <i class="bi bi-tags-fill text-primary"></i>
+                                <span class="ms-1">Price</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-currency-dollar text-secondary"></i>
+                                </span>
+                                <input asp-for="Price" type="number" step="0.01" class="form-control" placeholder="Enter price in USD" required />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
 
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary px-5">Add</button>
-                <a asp-action="Index" class="btn btn-secondary px-5">Back to List</a>
+  
+                        <div class="form-group mb-4">
+                            <label asp-for="CategoryId" class="form-label fw-bold">
+                                <i class="bi bi-list-ul text-primary"></i>
+                                <span class="ms-1">Category</span>
+                            </label>
+                            <select asp-for="CategoryId" class="form-select">
+                                <option value="">Select a category</option>
+                                @foreach (var category in Model.Categories)
+                                {
+                                    <option value="@category.Value">@category.Text</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                
+                        <div class="form-group mb-4">
+                            <label asp-for="ImageUrl" class="form-label fw-bold">
+                                <i class="bi bi-image-fill text-primary"></i>
+                                <span class="ms-1">Image URL</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-link text-secondary"></i>
+                                </span>
+                                <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" required />
+                            </div>
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
+
+                  
+                        <div class="form-group mb-4">
+                            <label asp-for="Availability" class="form-label fw-bold">
+                                <i class="bi bi-calendar-event-fill text-primary"></i>
+                                <span class="ms-1">Availability</span>
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-calendar-check text-secondary"></i>
+                                </span>
+                                <input asp-for="Availability" class="form-control" placeholder="e.g., Mon-Fri, 9am-5pm" required />
+                            </div>
+                            <span asp-validation-for="Availability" class="text-danger"></span>
+                        </div>
+
+              
+                        <div class="d-flex justify-content-center gap-3">
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="bi bi-plus-circle"></i> Add Service
+                            </button>
+                            <a asp-action="Index" class="btn btn-secondary btn-lg px-5">
+                                <i class="bi bi-arrow-left-circle"></i> Back to List
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 

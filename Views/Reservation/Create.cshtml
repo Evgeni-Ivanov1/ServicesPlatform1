@@ -1,7 +1,5 @@
 ﻿@model ServicesPlatform.Models.InputModels.Reservation.CreateReservationInputModel
 
-
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -22,9 +20,11 @@
         <input asp-for="ReservationDate" type="date" class="form-control" />
     </div>
 
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">Submit</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#confirmationModal">
+        Submit
+    </button>
 
-    <!-- Модал -->
+
     <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -35,9 +35,9 @@
                 <div class="modal-body">
                     <p>Are you sure you want to create a reservation for:</p>
                     <ul>
-                        <li><strong>Service:</strong> <span id="modalServiceName">@Model.ServiceName</span></li>
+                        <li><strong>Service:</strong> <span id="modalServiceName"></span></li>
                         <li><strong>Date:</strong> <span id="modalReservationDate"></span></li>
-                        <li><strong>Price:</strong> <span id="modalPrice">@Model.Price.ToString("C")</span></li>
+                        <li><strong>Price:</strong> <span id="modalPrice"></span></li>
                     </ul>
                 </div>
                 <div class="modal-footer">
@@ -51,8 +51,23 @@
 
 @section Scripts {
     <script>
-        document.querySelector("#reservationForm").addEventListener("input", function () {
-            document.querySelector("#modalReservationDate").innerText = document.querySelector("[name='ReservationDate']").value;
+        document.addEventListener("DOMContentLoaded", function () {
+            const reservationDateInput = document.querySelector("[name='ReservationDate']");
+            const today = new Date().toISOString().split('T')[0];
+
+            // Автоматично попълване на днешната дата
+            reservationDateInput.value = today;
+
+            // Обновяване на модалните данни при отваряне на модал
+            document.querySelector("[data-bs-target='#confirmationModal']").addEventListener("click", function () {
+                const serviceName = document.querySelector("[name='ServiceName']").value;
+                const reservationDate = reservationDateInput.value;
+                const price = parseFloat(document.querySelector("[name='Price']").value).toFixed(2);
+
+                document.querySelector("#modalServiceName").innerText = serviceName;
+                document.querySelector("#modalReservationDate").innerText = reservationDate;
+                document.querySelector("#modalPrice").innerText = price + " лв.";
+            });
         });
     </script>
 }

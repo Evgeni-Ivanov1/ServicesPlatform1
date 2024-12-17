@@ -86,7 +86,16 @@ using (var scope = app.Services.CreateScope())
         Console.WriteLine($"Error seeding roles: {ex.Message}");
     }
 }
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/test500")
+    {
+        context.Response.StatusCode = 500;
+        return;
+    }
 
+    await next();
+});
 
 app.MapControllerRoute(
     name: "default",

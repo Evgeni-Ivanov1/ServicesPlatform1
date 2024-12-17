@@ -17,11 +17,4 @@ public class ErrorController : Controller
         return View("Error500");
     }
 
-    [Route("Error")]
-    public IActionResult GeneralError()
-    {
-        var exceptionDetails = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
-        Response.StatusCode = 500; 
-        return View("ErrorGeneral", exceptionDetails?.Error);
-    }
 }

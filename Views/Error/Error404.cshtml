@@ -1,98 +1,68 @@
-﻿
-
-<!DOCTYPE html>
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <title>404 Not Found</title>
-
-    <!--  jQuery библиотека -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-
-    <style>
-		body {
-			height: 100%;
-			background: url("https://wallpapercave.com/wp/6SLzBEY.jpg") no-repeat left top;
-			background-size: cover;
-			overflow: hidden;
-			display: flex;
-			flex-flow: column wrap;
-			justify-content: center;
-			align-items: center;
-		}
-
-		.text h1 {
-			color: #011718;
-			margin-top: -200px;
-			font-size: 15em;
-			text-align: center;
-			text-shadow: -5px 5px 0px rgba(0,0,0,0.7), -10px 10px 0px rgba(0,0,0,0.4), -15px 15px 0px rgba(0,0,0,0.2);
-			font-family: monospace;
-			font-weight: bold;
-		}
-
-		.text h2 {
-			color: black;
-			font-size: 5em;
-			text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
-			text-align: center;
-			margin-top: -150px;
-			font-family: monospace;
-			font-weight: bold;
-		}
-
-		.text h3 {
-			color: white;
-			margin-left: 30px;
-			font-size: 2em;
-			text-shadow: -5px 5px 0px rgba(0,0,0,0.7);
-			margin-top: -40px;
-			font-family: monospace;
-			font-weight: bold;
-		}
-
-		.torch {
-			margin: -150px 0 0 -150px;
-			width: 200px;
-			height: 200px;
-			box-shadow: 0 0 0 9999em #000000f7;
-			opacity: 1;
-			border-radius: 50%;
-			position: fixed;
-			background: rgba(0,0,0,0.3);
-
-		{
-			content: '';
-			display: block;
-			border-radius: 50%;
-			width: 100%;
-			height: 100%;
-			top: 0px;
-			left: 0px;
-			box-shadow: inset 0 0 40px 2px #000, 0 0 20px 4px rgba(13,13,10,0.2);
-		}
-    </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple 404 Error Page</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-
-    <div class="text">
-        <h1>404</h1>
-        <h2>Uh, Ohh</h2>
-        <h3>Sorry, we can't find what you are looking for because it's so dark in here</h3>
-    </div>
-
-
-    <div class="torch"></div>
-
-    <!-- jQuery за ефект -->
-    <script>
-        $(document).mousemove(function (event) {
-            $('.torch').css({
-                'top': event.pageY - 75 + 'px', 
-                'left': event.pageX - 75 + 'px'
-            });
-        });
-    </script>
+    <section class="page_404">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12 ">
+                    <div class="col-sm-10 col-sm-offset-1  text-center">
+                        <div class="four_zero_four_bg">
+                            <h1 class="text-center ">404</h1>
+                        </div>
+                        <div class="contant_box_404">
+                            <h3 class="h2">
+                                Look like you're lost
+                            </h3>
+                            <p>the page you are looking is not avaible!</p>
+                            <a href="/" class="link_404">Go to Home</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 </html>
+<style>
+    .page_404 {
+        padding: 40px 0;
+        background: #fff;
+        font-family: "Arvo", serif;
+    }
+
+        .page_404 img {
+            width: 100%;
+        }
+
+    .four_zero_four_bg {
+        background-image: url(https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif);
+        height: 400px;
+        background-position: center;
+    }
+
+        .four_zero_four_bg h1 {
+            font-size: 80px;
+        }
+
+        .four_zero_four_bg h3 {
+            font-size: 80px;
+        }
+
+    .link_404 {
+        color: #fff !important;
+        padding: 10px 20px;
+        background: #39ac31;
+        margin: 20px 0;
+        display: inline-block;
+    }
+
+    .contant_box_404 {
+        margin-top: -50px;
+    }</style>

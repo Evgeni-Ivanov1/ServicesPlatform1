@@ -15,12 +15,14 @@ using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Database Connection
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(connectionString);
 });
 
+// Identity Configuration
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
@@ -33,6 +35,7 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
+// Dependency Injection
 builder.Services.AddScoped<IRoleSeeder, RoleSeeder>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
@@ -41,16 +44,18 @@ builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IServiceRepository, ServiceRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
-builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
+// ???????? ?????????? ? ???????
 builder.Services.AddControllersWithViews();
 
-
 var app = builder.Build();
+
+// Middleware ?? ??????
 app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
+// Seed Roles
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
@@ -65,18 +70,23 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
+    app.UseExceptionHandler("/Home/Error"); 
     app.UseHsts();
 }
+
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.Run();

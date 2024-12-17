@@ -46,6 +46,12 @@ namespace ReservationPlatform.Data
                 .HasForeignKey(s => s.CategoryId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<Service>()
+                     .HasOne(s => s.Category)  
+                     .WithMany(c => c.Services) 
+                     .HasForeignKey(s => s.CategoryId) 
+                     .OnDelete(DeleteBehavior.Restrict); 
+
             base.OnModelCreating(modelBuilder);
         }
     }

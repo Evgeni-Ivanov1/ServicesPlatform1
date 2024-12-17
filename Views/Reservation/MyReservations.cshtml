@@ -1,37 +1,48 @@
 ﻿@model IEnumerable<ServicesPlatform.Models.OutputModels.Reservation.ReservationViewModel>
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "My Reservations";
 }
 
-<h1>My Reservations</h1>
+<link rel="stylesheet" href="~/css/Reservations.css" />
+
+<h1 class="text-center mb-4">My Reservations</h1>
 
 @if (TempData["Message"] != null)
 {
-    <div class="alert alert-info">
+    <div class="alert alert-info text-center">
         @TempData["Message"]
     </div>
 }
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Service Name</th>
-            <th>Date</th>
-            <th>Price</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="container">
+    <div class="row justify-content-center">
         @foreach (var reservation in Model)
         {
-            <tr>
-                <td>@reservation.ServiceName</td>
-                <td>@reservation.ReservationDate.ToShortDateString()</td>
-                <td>@reservation.Price.ToString("C")</td>
-                <td>
-                    <a class="btn btn-danger" asp-controller="Reservation" asp-action="Cancel" asp-route-id="@reservation.Id">Cancel</a>
-                </td>
-            </tr>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center d-flex flex-column justify-content-between">
+             
+                        <h5 class="card-title text-primary fw-bold">@reservation.ServiceName</h5>
+            
+                        <p class="reservation-date text-muted mb-2">
+                            <i class="bi bi-calendar"></i> @reservation.ReservationDate.ToShortDateString()
+                        </p>
+
+                        <p class="price text-success fw-bold mb-3">
+                            <i class="bi bi-tag"></i> Price: @reservation.Price.ToString("C")
+                        </p>
+
+
+                        <div class="mt-auto">
+                            <a class="btn btn-danger w-100" asp-controller="Reservation" asp-action="Cancel" asp-route-id="@reservation.Id">
+                                <i class="bi bi-x-circle"></i> Cancel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>

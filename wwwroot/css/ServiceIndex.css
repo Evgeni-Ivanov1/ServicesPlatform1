@@ -1,19 +1,68 @@
-﻿
-.table td, .table th {
-    vertical-align: middle; 
-    text-align: center; 
+﻿/* Основни стилове */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.description-column {
-    max-width: 650px;
-    word-wrap: break-word;
-    white-space: normal;
+h1 {
+    font-weight: 700;
 }
 
-.actions-column {
-    white-space: nowrap; 
+/* Карти */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.btn {
-    margin: 2px; 
+    .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
 
+.card-img-top {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.card-title a {
+    color: #1e77fa; /* Син цвят за името */
+    transition: color 0.3s ease;
+}
+
+    .card-title a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+/* Центриране и оцветяване на текст */
+.text-success {
+    color: #28a745 !important;
+}
+
+.card p {
+    margin-bottom: 5px;
+}
+
+/* Бутони */
+.btn-sm i {
+    margin-right: 5px;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+    .btn-success:hover {
+        background-color: #218838;
+        border-color: #1e7e34;
+    }
+
+.btn-info {
+    background-color: #17a2b8;
+    border-color: #17a2b8;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}

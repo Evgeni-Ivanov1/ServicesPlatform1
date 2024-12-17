@@ -4,6 +4,7 @@ using ServicesPlatform.Contracts.Services;
 using ServicesPlatform.Models;
 using ServicesPlatform.Models.InputModels.Category;
 using ServicesPlatform.Models.OutputModels.Category;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -48,12 +49,26 @@ namespace ReservationPlatform.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return Json(new { success = false });
+                return Json(new { success = false, message = "Invalid input data." });
             }
 
-            await _categoryService.UpdateAsync(model);
-            return Json(new { success = true});
+            try
+            {
+                var updatedCategory = await _categoryService.UpdateAsync(model);
+
+                if (updatedCategory != null)
+                {
+                    return Json(new { success = true });
+                }
+
+                return Json(new { success = false, message = "Update failed." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
+
 
         [HttpPost]
         public async Task<IActionResult> Delete(int id)

@@ -1,0 +1,41 @@
+﻿
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        transform: scale(1.03);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+.card-title {
+    font-size: 1.2rem;
+    color: #007bff;
+}
+
+    .card-title:hover {
+        text-decoration: underline;
+    }
+
+.price {
+    color: #28a745;
+    font-size: 1.1rem;
+}
+
+.reservation-date {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        transform: scale(1.02);
+    }

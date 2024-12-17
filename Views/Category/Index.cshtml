@@ -105,6 +105,84 @@
     }     
 </style>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Add Category Form Submission
+            $("#addCategoryForm").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/Category/Create",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Category added successfully.");
+                            location.reload();
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while adding the category.");
+                    }
+                });
+            });
+
+            // Edit Button Click: Populate Modal Fields
+            $(".edit-btn").click(function () {
+                $("#editId").val($(this).data("id"));
+                $("#editName").val($(this).data("name"));
+                $("#editDescription").val($(this).data("description"));
+                $("#editCategoryModal").modal("show");
+            });
+
+            // Edit Category Form Submission
+            $("#editCategoryForm").submit(function (e) {
+                e.preventDefault();
+                $.ajax({
+                    url: "/Category/Edit",
+                    type: "POST",
+                    data: $(this).serialize(),
+                    success: function (response) {
+                        if (response.success) {
+                            alert("Category updated successfully.");
+                            location.reload();
+                        } else {
+                            alert("Error: " + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("An error occurred while updating the category.");
+                    }
+                });
+            });
+
+            // Delete Category
+            $(".delete-btn").click(function () {
+                var id = $(this).data("id");
+                if (confirm("Are you sure you want to delete this category?")) {
+                    $.ajax({
+                        url: "/Category/Delete",
+                        type: "POST",
+                        data: { id: id },
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Category deleted successfully.");
+                                location.reload();
+                            } else {
+                                alert("Error: " + response.message);
+                            }
+                        },
+                        error: function () {
+                            alert("An error occurred while deleting the category.");
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
 
 
 

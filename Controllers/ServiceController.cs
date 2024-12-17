@@ -21,6 +21,7 @@ public class ServiceController : Controller
         _serviceService = serviceService;
         _categoryService = categoryService;
     }
+  
 
     public async Task<IActionResult> Index()
     {
@@ -156,4 +157,6 @@ public class ServiceController : Controller
         TempData["SuccessMessage"] = "Service deleted successfully.";
         return RedirectToAction(nameof(Index));
     }
+ 
+
 }

@@ -1,0 +1,36 @@
+﻿
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background-color: #222; /* Тъмен фон */
+    color: #fff;
+    padding: 15px 0;
+}
+
+
+.footer-links .footer-link {
+    text-decoration: none;
+    color: #00b4d8; 
+    font-weight: bold;
+    font-size: 1.1rem;
+    transition: all 0.3s ease; 
+}
+
+    .footer-links .footer-link:hover {
+        color: #90e0ef;
+        transform: scale(1.1); 
+        text-decoration: underline; 
+        transition: all 0.3s ease; 
+    }
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+    body > .footer {
+        position: relative;
+        bottom: 0;
+        margin-top: auto;
+    }

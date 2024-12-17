@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using ReservationPlatform.Common;
+
+
 
 namespace ServicesPlatform.Data.Models
 {
@@ -37,5 +40,9 @@ namespace ServicesPlatform.Data.Models
         public DateTime CreatedOn { get; set; }
 
         public ICollection<Review> Reviews { get; set; }
+        
+
+
+
     }
 }

@@ -1,4 +1,4 @@
-﻿﻿ /* бутони - service/details */
+﻿
 .edit-button, .delete-button {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -10,22 +10,18 @@
 }
 
     .edit-button:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         box-shadow: 0 0 10px rgba(40, 167, 69, 0.5);
     }
 
 .delete-button {
-    background-color: #dc3545; /* Червен цвят */
+    background-color: #dc3545;
     border-color: #dc3545;
     color: white;
 }
 
     .delete-button:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         box-shadow: 0 0 10px rgba(220, 53, 69, 0.5);
     }
 
-.btn-success:hover, .btn-danger:hover {
-    transform: scale(1.05);
-    transition: transform 0.2s ease-in-out;
-}

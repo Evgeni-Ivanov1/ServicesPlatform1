@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ServicesPlatform.Data.Models;
@@ -12,7 +11,6 @@ namespace ReservationPlatform.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public string Name { get; set; }
-  
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -42,7 +40,6 @@ namespace ReservationPlatform.Data
     .OnDelete(DeleteBehavior.Cascade);
 
 
-            // ???????????? ?? Service ? Category
             modelBuilder.Entity<Service>()
                 .HasOne(s => s.Category)
                 .WithMany(c => c.Services)

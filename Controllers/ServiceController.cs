@@ -71,8 +71,7 @@ public class ServiceController : Controller
             return View(model);
         }
 
-        // ??????? ??????? ?????????? (OwnerId)
-        model.CreatorId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        model.OwnerId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         await _serviceService.CreateAsync(model);
         TempData["SuccessMessage"] = "Service added successfully.";
@@ -146,7 +145,6 @@ public class ServiceController : Controller
             return NotFound();
         }
 
-        // ???????? ???? ???????? ?????????? ? ???????? ??? ?????????????
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (service.OwnerId != userId && !User.IsInRole("Administrator"))
         {
@@ -157,6 +155,23 @@ public class ServiceController : Controller
         TempData["SuccessMessage"] = "Service deleted successfully.";
         return RedirectToAction(nameof(Index));
     }
- 
+    [Authorize] 
+    public async Task<IActionResult> MyServices()
+    {
+        
+        var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (string.IsNullOrEmpty(userId))
+        {
+            return Unauthorized(); 
+        }
+
+     
+        var userServices = await _serviceService.GetServicesByOwnerIdAsync(userId);
+
+        return View("Index", userServices); 
+    }
+
+
 
 }

@@ -12,5 +12,6 @@ public interface IServiceRepository
     Task<Service> GetByIdAsync(int id);
     Task<Service> CreateAsync(Service service);
     Task<Service> UpdateAsync(Service service);
+    Task<IEnumerable<Service>> GetServicesByOwnerIdAsync(string ownerId);
     Task DeleteAsync(int id);
 }

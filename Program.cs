@@ -44,10 +44,12 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<IReservationService, ReservationService>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 using (var scope = app.Services.CreateScope())
 {

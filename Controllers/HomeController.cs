@@ -22,6 +22,12 @@ namespace ReservationPlatform.Controllers
         {
             return View();
         }
+        [Route("Test/ErrorCode")]
+        public IActionResult ErrorCode(int statusCode)
+        {
+            return StatusCode(statusCode, $"This is a test for status code {statusCode}.");
+        }
+
 
     }
 }

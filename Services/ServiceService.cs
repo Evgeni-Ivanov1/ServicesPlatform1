@@ -31,17 +31,17 @@ public class ServiceService : IServiceService
 
    public async Task<Service> CreateAsync(CreateServiceInputModel model)
 {
-    var service = new Service
-    {
-        Name = model.Name,
-        Description = model.Description,
-        Price = model.Price,
-        CategoryId = model.CategoryId,
-        ImageUrl = model.ImageUrl,
-        Availability = model.Availability,
-        OwnerId = model.CreatorId,
-        CreatedOn = DateTime.Now
-    };
+        var service = new Service
+        {
+            Name = model.Name,
+            Description = model.Description,
+            Price = model.Price,
+            CategoryId = model.CategoryId,
+            ImageUrl = model.ImageUrl,
+            Availability = model.Availability,
+            OwnerId = model.OwnerId,
+            CreatedOn = DateTime.Now
+        };
 
     return await _serviceRepository.CreateAsync(service);
 }
@@ -78,4 +78,9 @@ public async Task<Service> UpdateAsync(UpdateServiceInputModel model)
     {
         throw new NotImplementedException();
     }
+    public async Task<IEnumerable<Service>> GetServicesByOwnerIdAsync(string ownerId)
+    {
+        return await _serviceRepository.GetServicesByOwnerIdAsync(ownerId);
+    }
+
 }

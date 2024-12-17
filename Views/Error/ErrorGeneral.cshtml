@@ -1,0 +1,18 @@
+﻿@model Exception
+
+@{
+    ViewData["Title"] = "An Error Occurred";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4 text-danger">Something went wrong</h1>
+    <p>We encountered an unexpected error.</p>
+    @if (Model != null)
+    {
+        <div class="alert alert-danger">
+            <strong>Details:</strong> @Model.Message
+        </div>
+    }
+    <a href="/" class="btn btn-primary">Go to Home Page</a>
+</div>

@@ -23,7 +23,7 @@ namespace ServicesPlatform.Models.InputModels.Service
         public string ImageUrl { get; set; }
         public string Availability { get; set; }
 
-        public string CreatorId { get; set; } 
+        public string OwnerId { get; set; } 
 
         public List<SelectListItem> Categories { get; set; }
     }

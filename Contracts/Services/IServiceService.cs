@@ -14,6 +14,8 @@ namespace ServicesPlatform.Contracts.Services
  
         Task<Service> CreateAsync(CreateServiceInputModel model); 
         Task<Service> UpdateAsync(UpdateServiceInputModel model);
+        Task<IEnumerable<Service>> GetServicesByOwnerIdAsync(string ownerId);
+
         Task DeleteAsync(int id);
       
     }

@@ -1,22 +1,22 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServicesPlatform.Data.Models;
-using System; // Трябва да добавите това пространство от имена
+using System; 
 using System.Collections.Generic;
 
 namespace ReservationPlatform.Controllers
 {
     public class AdminController : Controller
     {
-        // Показва административния панел
+     
         public IActionResult Dashboard()
         {
             return View();
         }
 
-        // Показва логовете на действията
+
         public IActionResult Logs()
         {
-            // Примерни данни за логовете
+     
             var logs = new List<AdminLog>
             {
                 new AdminLog { Id = 1, Action = "Added new service", PerformedBy = "Admin", PerformedOn = DateTime.Now.AddDays(-1) },

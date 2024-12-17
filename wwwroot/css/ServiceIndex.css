@@ -1,0 +1,19 @@
+﻿
+.table td, .table th {
+    vertical-align: middle; 
+    text-align: center; 
+}
+
+.description-column {
+    max-width: 650px;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+.actions-column {
+    white-space: nowrap; 
+}
+
+.btn {
+    margin: 2px; 
+

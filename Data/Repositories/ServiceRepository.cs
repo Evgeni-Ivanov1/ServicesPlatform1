@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using ReservationPlatform.Data;
 using ServicesPlatform.Contracts.Repositories;
+using System.Linq;
 
 public class ServiceRepository : IServiceRepository
 {
@@ -54,5 +55,14 @@ public class ServiceRepository : IServiceRepository
             .ThenInclude(r => r.User) 
             .FirstOrDefaultAsync(s => s.Id == id);
     }
+    public async Task<IEnumerable<Service>> GetServicesByOwnerIdAsync(string ownerId)
+    {
+        return await _context.Services
+            .Include(s => s.Category) 
+            .Where(s => s.OwnerId == ownerId) 
+            .ToListAsync();
+    }
+
+
 
 }

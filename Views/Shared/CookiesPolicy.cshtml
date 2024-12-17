@@ -1,33 +1,78 @@
-﻿﻿@{
+﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewData["Title"] = "Cookies Policy";
 }
 
-    <link rel="stylesheet" href="/css/footerBar.css" />
+<div class="container my-5 py-5">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-5 text-center">
+            <div class="rounded shadow-lg" style="
+                background-image: url('/images/CookiesPolicy.jpg');
+                height: 300px;
+                background-size: cover;
+                background-position: center;">
+            </div>
+        </div>
 
+        <div class="col-md-7">
+            <h1 class="display-4 text-gradient fw-bold">Our Cookies Policy</h1>
+            <p class="lead mt-4">
+                We use cookies to improve performance, analyze site usage, and personalize your experience. By continuing to browse, you agree to our use of cookies.
+            </p>
 
-<div class="container my-5">
-    <h1 class="text-center mb-4">Cookies Policy</h1>
-    <p class="text-center">
-        We use cookies to enhance your experience on our website. By continuing to use our site, you agree to our use of cookies.
-    </p>
-    <div class="row mt-4">
-        <div class="col-md-6">
-            <div style="background-image: url('/images/CookiesPolicy.jpg'); height: 300px; background-size: cover; background-position: center;" class="rounded">
+            <div class="mt-4">
+                <h4><i class="bi bi-info-circle text-info me-2"></i> What are Cookies?</h4>
+                <p>
+                    Cookies are small data files stored on your browser to make your visit smoother and tailored to your preferences.
+                </p>
             </div>
 
-        </div>
-        <div class="col-md-6">
-            <h4>What are Cookies?</h4>
-            <p>
-                Cookies are small pieces of data that websites store on your browser to improve functionality and personalize content. They help us analyze how you interact with our site.
-            </p>
-            <h4>How We Use Cookies?</h4>
-            <ul>
-                <li>To improve site performance</li>
-                <li>To personalize your experience</li>
-                <li>To collect analytics data</li>
-            </ul>
+            <div class="mt-4">
+                <h4><i class="bi bi-gear-fill text-primary me-2"></i> How We Use Cookies</h4>
+                <ul class="list-unstyled">
+                    <li><i class="bi bi-check-circle text-success me-2"></i> To improve site performance</li>
+                    <li><i class="bi bi-heart-fill text-danger me-2"></i> To personalize your experience</li>
+                    <li><i class="bi bi-bar-chart-fill text-warning me-2"></i> To collect analytics data</li>
+                </ul>
+            </div>
+
+            <div class="mt-5 text-center">
+                <a class="btn btn-primary btn-lg rounded-pill px-4" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-arrow-left-circle-fill me-2"></i> Back to Home
+                </a>
+            </div>
         </div>
     </div>
 </div>
+
+<style>
+    .text-gradient {
+        background: linear-gradient(to right, #00b4d8, #90e0ef);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .btn-primary {
+        font-weight: bold;
+        background: linear-gradient(135deg, #007bff, #00b4d8);
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0056b3, #007bff);
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+    .container {
+        background-color: #ffffff;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .bi {
+        font-size: 1.3rem;
+    }
+</style>
